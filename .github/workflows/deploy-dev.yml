@@ -1,0 +1,26 @@
+name: Deploy develop
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  deploy-package:
+    name: Deploy package
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: darwinia-network/devops/actions/smart-vercel@main
+        name: Deploy home
+        with:
+          node_version: 22
+          vercel_token: ${{ secrets.VERCEL_TOKEN }}
+          vercel_group: itering
+          preview_output: true
+          project_name: "helix-home"
+          dist_path: dist
+          enable_notify_comment: true
+          enable_notify_slack: false
+          slack_channel: pubfi-devops
+          slack_webhook: ${{ secrets.SLACK_INCOMING_WEBHOOK_URL }}

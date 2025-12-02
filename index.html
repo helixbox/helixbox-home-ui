@@ -665,11 +665,11 @@
 
         @media (max-width: 768px) {
             :root { --header-height: 60px; }
-            
+
             .container { border: none; padding: 0; }
             .nav-inner { padding: 0 20px; }
             .hero-content { border: none; padding: 0 20px; }
-            
+
             .hamburger { display: block; }
             .nav-links {
                 position: fixed;
@@ -683,16 +683,34 @@
                 display: none;
             }
             .nav-links.active { display: flex; }
-            .nav-link { 
-                width: 100%; 
-                border-left: none; 
-                border-bottom: 1px solid var(--grid-line); 
+            .nav-link {
+                width: 100%;
+                border-left: none;
+                border-bottom: 1px solid var(--grid-line);
                 padding: 20px;
                 justify-content: center;
             }
-            
+
             .hero-text h1 { font-size: 3rem; }
             .footer-cta h2 { font-size: 3rem; }
+        }
+
+        /* Partner Logo Styles */
+        .partner-logo {
+            max-height: 50px;
+            width: auto;
+            filter: invert(1) brightness(0.55);
+            transition: all 0.3s;
+        }
+
+        .partner-cell:hover .partner-logo {
+            filter: invert(1) brightness(1);
+            transform: scale(1.05);
+        }
+
+        /* Web3 Foundation logo - larger size */
+        .partner-logo-web3 {
+            max-height: 70px;
         }
     </style>
 <script type="importmap">
@@ -854,17 +872,17 @@
                 <div class="partner-grid">
                     <!-- SNZ -->
                     <div class="partner-cell">
-                        <span class="partner-text">SNZ</span>
+                        <img src="/img/snz.svg" alt="SNZ Capital" class="partner-logo">
                     </div>
 
                     <!-- WEB3 FOUNDATION -->
                     <div class="partner-cell">
-                        <span class="partner-text">Web3 Foundation</span>
+                        <img src="/img/web3.svg" alt="Web3 Foundation" class="partner-logo partner-logo-web3">
                     </div>
 
                     <!-- PARITY -->
                     <div class="partner-cell">
-                         <span class="partner-text">Parity</span>
+                         <img src="/img/parity.svg" alt="Parity" class="partner-logo">
                     </div>
 
                 </div>

@@ -1,0 +1,29 @@
+需要从UI团队获取的图片文件：
+
+1. apple-touch-icon.png (180x180px)
+   - 用于iOS主屏幕图标
+   - 建议尺寸：180x180px
+   - 格式：PNG
+   - 建议：深色背景上的白色logo
+
+2. og-image.png (1200x630px)
+   - 用于社交媒体分享预览（Facebook, LinkedIn等）
+   - 推荐尺寸：1200x630px
+   - 格式：PNG 或 JPG
+   - 建议内容：品牌logo + 标语 "Building the Future of Crypto + AI"
+   - 背景建议：黑色渐变 + 蓝色accent (#0040FF)
+
+3. favicon.ico (32x32px, 可选)
+   - 当前使用的是占位符文本文件
+   - 推荐尺寸：32x32px（多尺寸ICO：16x16, 32x32, 48x48）
+   - 格式：ICO
+   - 注意：已有 favicon.svg 作为主要图标，此文件为后备方案
+
+已创建的临时文件：
+- favicon.svg ✓ （已使用logo创建，可以直接使用）
+- favicon.ico （占位符，建议替换）
+- apple-touch-icon.png （占位符，需要替换）
+- og-image.png （占位符，需要替换）
+
+替换方法：
+直接将UI团队提供的图片文件放入 public/ 目录，覆盖现有占位符文件即可。

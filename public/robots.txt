@@ -1,0 +1,13 @@
+# robots.txt for https://helixbox.ai
+
+# Allow all search engines to crawl the site
+User-agent: *
+Allow: /
+
+# Disallow crawling of build artifacts and development files
+Disallow: /node_modules/
+Disallow: /.git/
+Disallow: /dist/
+
+# Sitemap location
+Sitemap: https://helixbox.ai/sitemap.xml

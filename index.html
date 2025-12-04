@@ -29,13 +29,29 @@
     <meta name="theme-color" content="#0040FF">
     <meta name="msapplication-TileColor" content="#0040FF">
 
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://helixbox.ai/">
+
+    <!-- Enhanced SEO Meta Tags -->
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+    <meta property="og:locale" content="en_US">
+    <meta name="twitter:site" content="@helixbox_ai">
+    <meta name="twitter:creator" content="@helixbox_ai">
+
+    <!-- Mobile App Meta Tags -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
     <!-- Favicons -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 
+    <!-- Resource Preloading for Performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" as="image" href="/og-image.png">
     <link href="https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -724,8 +740,137 @@
   }
 }
 </script>
+
+<!-- Structured Data (JSON-LD Schema.org) -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Helixbox Labs",
+  "url": "https://helixbox.ai",
+  "logo": "https://helixbox.ai/favicon.svg",
+  "description": "Building the Future of Crypto + AI. Innovating at the intersection of Blockchain Data, Intelligence, and Execution.",
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "email": "hello@helixbox.ai",
+    "contactType": "Customer Service"
+  },
+  "foundingDate": "2024",
+  "sameAs": []
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Helixbox Labs",
+  "url": "https://helixbox.ai",
+  "description": "Innovating at the intersection of Blockchain Data, Intelligence, and Execution with products like Subscan, PubFi, Helixbox Solvers, and DeGov.AI.",
+  "publisher": {
+    "@type": "Organization",
+    "name": "Helixbox Labs"
+  }
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Subscan",
+  "applicationCategory": "BlockchainExplorer",
+  "description": "Subscan is a robust multi-chain explorer for Polkadot, Kusama, and EVM-compatible networks.",
+  "url": "https://www.subscan.io/",
+  "provider": {
+    "@type": "Organization",
+    "name": "Helixbox Labs"
+  }
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "PubFi",
+  "applicationCategory": "IntelligencePlatform",
+  "description": "AI-driven intelligence platform that restructures fragmented crypto information into clear, actionable insights.",
+  "url": "https://pubfi.ai/",
+  "provider": {
+    "@type": "Organization",
+    "name": "Helixbox Labs"
+  }
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Helixbox Solvers",
+  "applicationCategory": "DeFiTradingTool",
+  "description": "Professional DEX Solvers delivering best execution and MEV protection by blending liquidity from on-chain, cross-chain, and off-chain sources.",
+  "provider": {
+    "@type": "Organization",
+    "name": "Helixbox Labs"
+  }
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "DeGov.AI",
+  "applicationCategory": "GovernancePlatform",
+  "description": "AI-powered DAO governance platform revolutionizing decentralized governance with artificial intelligence.",
+  "url": "https://degov.ai/",
+  "provider": {
+    "@type": "Organization",
+    "name": "Helixbox Labs"
+  }
+}
+</script>
+
 </head>
 <body>
+
+    <!-- Noscript Content for Search Engines and Accessibility -->
+    <noscript>
+        <div style="padding: 40px; max-width: 1200px; margin: 0 auto; font-family: Arial, sans-serif; line-height: 1.6;">
+            <h1>Helixbox Labs - Building the Future of Crypto + AI</h1>
+            <p>Innovating at the intersection of Blockchain Data, Intelligence, and Execution.</p>
+
+            <h2>Our Products</h2>
+
+            <h3>Subscan - Web3 Portal</h3>
+            <p>Subscan is a robust multi-chain explorer for Polkadot, Kusama, and EVM-compatible networks. We enable users to easily explore transactions, accounts, blocks, and network statuses across both Substrate and EVM environments. Through advanced data analytics and real-time insights, Subscan empowers developers, validators, and the Web3 community to dive deeper into blockchain activities.</p>
+            <p><a href="https://www.subscan.io/">Visit Subscan</a></p>
+
+            <h3>PubFi - AI-Driven Intelligence Platform</h3>
+            <p>PubFi is an AI-driven intelligence platform that restructures fragmented crypto information into clear, actionable insights. Powered by an end-to-end "intelligence supply chain," PubFi ingests news, on-chain data, community signals, and prediction-market activity, then transforms them into precise, topic-based intelligence streams.</p>
+            <p><a href="https://pubfi.ai/">Visit PubFi</a></p>
+
+            <h3>Helixbox Solvers - Professional DEX Solvers</h3>
+            <p>Helixbox Solver powers best-in-class trade execution by blending liquidity from everywhere that matters—on-chain, cross-chain, and off-chain. By processing flows from Cow.fi and 1inch, it instantly computes optimal routes that minimize slippage and maximize user value.</p>
+
+            <h3>DeGov.AI - The AI-Powered DAO Governance Platform</h3>
+            <p>DeGov.AI is a RingDAO project dedicated to revolutionizing DAO governance with AI. Supported by Helixbox Labs—who provide essential R&D and marketing services—the platform is built on OpenZeppelin's trusted Governor contracts to offer a streamlined, intuitive experience.</p>
+            <p><a href="https://degov.ai/">Visit DeGov.AI</a></p>
+
+            <h2>Partners</h2>
+            <ul>
+                <li>SNZ Capital</li>
+                <li>Web3 Foundation</li>
+                <li>Parity Technologies</li>
+            </ul>
+
+            <h2>Contact</h2>
+            <p>Email: <a href="mailto:hello@helixbox.ai">hello@helixbox.ai</a></p>
+            <p>© 2025 Helixbox Labs. All rights reserved.</p>
+        </div>
+    </noscript>
 
     <!-- Decorative Grid Overlay -->
     <div class="grid-overlay">

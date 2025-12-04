@@ -847,8 +847,12 @@ const GlobalUI: React.FC = () => {
         // Mobile Menu
         const hamburger = document.getElementById('hamburger');
         const navLinks = document.getElementById('nav-links');
-        
-        const toggleMenu = () => navLinks?.classList.toggle('active');
+
+        const toggleMenu = () => {
+            navLinks?.classList.toggle('active');
+            const isExpanded = navLinks?.classList.contains('active');
+            hamburger?.setAttribute('aria-expanded', String(isExpanded));
+        };
         if (hamburger) hamburger.addEventListener('click', toggleMenu);
 
         // Smooth Scrolling for Navigation
@@ -866,6 +870,7 @@ const GlobalUI: React.FC = () => {
                     // Close mobile menu if open
                     if (navLinks?.classList.contains('active')) {
                         navLinks.classList.remove('active');
+                        hamburger?.setAttribute('aria-expanded', 'false');
                     }
                     
                     // Fixed header offset (matches CSS --header-height: 80px)

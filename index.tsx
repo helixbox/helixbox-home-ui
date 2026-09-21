@@ -5,6 +5,15 @@ import * as THREE from 'three';
 // --- SHARED CONSTANTS ---
 const PARTICLE_COUNT = 15000;
 const CYCLE_DURATION = 10000;
+const DATA_FUNNEL_HEIGHT = 90;
+const DATA_FUNNEL_NECK_RADIUS = 14;
+const DATA_FUNNEL_TOP_RADIUS = 92;
+const DATA_FUNNEL_BOTTOM_RADIUS = 68;
+
+const getDataFunnelRadius = (t: number) => {
+  const radius = t >= 0 ? DATA_FUNNEL_TOP_RADIUS : DATA_FUNNEL_BOTTOM_RADIUS;
+  return DATA_FUNNEL_NECK_RADIUS + (radius - DATA_FUNNEL_NECK_RADIUS) * t * t;
+};
 
 // --- HELPER FUNCTIONS ---
 const getRandomPointOnSphere = (r: number) => {
@@ -279,99 +288,85 @@ const Generators = {
     return { positions, colors };
   },
 
-  // 2. Pubfi: News Sheet with Outer Frame
-  newsSheet: () => {
+  // 2. PubFi: structured signal routing layer
+  dataRouter: () => {
     const positions = new Float32Array(PARTICLE_COUNT * 3);
     const colors = new Float32Array(PARTICLE_COUNT * 3);
     const tempColor = new THREE.Color();
-    
-    const PAPER_W = 130;
-    const PAPER_H = 170;
-    
-    // Frame Dimensions
-    const FRAME_W = 150;
-    const FRAME_H = 190;
-    const FRAME_D = 30;
+
+    // One asymmetric funnel surface: a large source ring narrows into the
+    // refinement core, then expands into a smaller output ring.
+    const rimEnd = Math.floor(PARTICLE_COUNT * 0.10);
+    const meridianEnd = Math.floor(PARTICLE_COUNT * 0.72);
+    const latitudeEnd = Math.floor(PARTICLE_COUNT * 0.82);
+    const sprayEnd = Math.floor(PARTICLE_COUNT * 0.92);
+    const flowStart = sprayEnd;
+    const flow = new Float32Array((PARTICLE_COUNT - flowStart) * 3);
+    const meridianCount = 96;
 
     for (let i = 0; i < PARTICLE_COUNT; i++) {
         let x, y, z;
-        
-        // Use 20% of particles for the sparse outer frame
-        const isFrame = i < PARTICLE_COUNT * 0.2;
 
-        if (isFrame) {
-            // -- OUTER WIREFRAME FRAME --
-            const edge = Math.floor(Math.random() * 12);
-            
-            const rand = (Math.random() - 0.5) * 2; // -1 to 1
-            const halfW = FRAME_W / 2;
-            const halfH = FRAME_H / 2;
-            const halfD = FRAME_D / 2;
-
-            if (edge < 4) { // Parallel to X
-                x = rand * halfW;
-                y = (edge % 2 === 0 ? 1 : -1) * halfH;
-                z = (edge < 2 ? 1 : -1) * halfD;
-            } else if (edge < 8) { // Parallel to Y
-                x = (edge % 2 === 0 ? 1 : -1) * halfW;
-                y = rand * halfH;
-                z = (edge < 6 ? 1 : -1) * halfD;
-            } else { // Parallel to Z
-                x = (edge % 2 === 0 ? 1 : -1) * halfW;
-                y = (edge < 10 ? 1 : -1) * halfH;
-                z = rand * halfD;
-            }
-
-            // Add subtle noise/scatter
-            x += (Math.random() - 0.5) * 2;
-            y += (Math.random() - 0.5) * 2;
-            z += (Math.random() - 0.5) * 2;
-
-            tempColor.setHSL(0.6, 0.4, 0.3);
+        if (i < rimEnd) {
+            // Only the open perimeter rings remain; there are no filled caps.
+            const top = Math.random() < 0.56;
+            const theta = Math.random() * Math.PI * 2;
+            const radius = top ? DATA_FUNNEL_TOP_RADIUS : DATA_FUNNEL_BOTTOM_RADIUS;
+            y = top ? DATA_FUNNEL_HEIGHT : -DATA_FUNNEL_HEIGHT;
+            z = Math.sin(theta) * radius;
+            x = Math.cos(theta) * radius;
+            tempColor.setHSL(top ? 0.57 : 0.72, 0.92, 0.58 + Math.random() * 0.2);
+        } else if (i < meridianEnd) {
+            // Fixed-angle, smooth meridians give the silhouette one continuous curve.
+            const theta = Math.floor(Math.random() * meridianCount) / meridianCount * Math.PI * 2;
+            const t = Math.random() * 2 - 1;
+            const radius = getDataFunnelRadius(t);
+            x = Math.cos(theta) * radius;
+            y = t * DATA_FUNNEL_HEIGHT;
+            z = Math.sin(theta) * radius;
+            const hue = THREE.MathUtils.lerp(0.72, 0.57, (t + 1) / 2);
+            tempColor.setHSL(hue, 0.9, 0.4 + Math.random() * 0.25);
+        } else if (i < latitudeEnd) {
+            // A few latitude contours support depth without forming a cap or lid.
+            const t = -1 + Math.floor(Math.random() * 15) / 7;
+            const radius = getDataFunnelRadius(t);
+            const theta = Math.random() * Math.PI * 2;
+            x = Math.cos(theta) * radius;
+            y = t * DATA_FUNNEL_HEIGHT;
+            z = Math.sin(theta) * radius;
+            const hue = THREE.MathUtils.lerp(0.72, 0.57, (t + 1) / 2);
+            tempColor.setHSL(hue, 0.7, 0.22 + Math.random() * 0.14);
+        } else if (i < sprayEnd) {
+            // Matching sparse data fields diffuse beyond both open rings.
+            const top = Math.random() < 0.56;
+            const radiusBase = top ? DATA_FUNNEL_TOP_RADIUS : DATA_FUNNEL_BOTTOM_RADIUS;
+            const theta = Math.random() * Math.PI * 2;
+            const spread = 0.42 + Math.pow(Math.random(), 0.6) * 1.15;
+            const heightOffset = 6 + Math.pow(Math.random(), 1.7) * 52;
+            const radius = radiusBase * spread;
+            x = Math.cos(theta) * radius;
+            y = (top ? 1 : -1) * (DATA_FUNNEL_HEIGHT + heightOffset);
+            z = Math.sin(theta) * radius;
+            // Keep the output field as legible as the purple lower field without forming a lid.
+            tempColor.setHSL(top ? 0.58 : 0.71, 0.74, top ? 0.34 + Math.random() * 0.22 : 0.22 + Math.random() * 0.2);
         } else {
-            // -- INNER PAPER CONTENT --
-            const WIDTH = PAPER_W;
-            const HEIGHT = PAPER_H;
-            
-            const r = Math.random();
-            if (r < 0.15) {
-                 // Header
-                 x = (Math.random() - 0.5) * WIDTH;
-                 y = HEIGHT * 0.4 + (Math.random() - 0.5) * 15;
-            } else if (r < 0.35) {
-                 // Image Box
-                 const boxW = WIDTH * 0.4;
-                 const boxH = HEIGHT * 0.25;
-                 x = (WIDTH * 0.25) + (Math.random() - 0.5) * boxW;
-                 y = (HEIGHT * 0.15) + (Math.random() - 0.5) * boxH;
-            } else {
-                // Text Columns
-                const textAreaH = HEIGHT * 0.8;
-                const yBase = -HEIGHT * 0.5 + Math.random() * textAreaH;
-                
-                const lineHeight = 8;
-                y = Math.floor(yBase / lineHeight) * lineHeight;
-                y += (Math.random() - 0.5) * 3;
+            // Counter-flowing signals will be animated along the same curved meridians.
+            const flowIndex = i - flowStart;
+            const flowOffset = flowIndex * 3;
+            const theta = Math.floor(Math.random() * meridianCount) / meridianCount * Math.PI * 2;
+            const phase = Math.random();
+            const direction = Math.random() < 0.5 ? -1 : 1;
 
-                const inImageZone = (y > 0 && y < HEIGHT * 0.3);
-                
-                if (inImageZone) {
-                    x = -WIDTH * 0.25 + (Math.random() - 0.5) * (WIDTH * 0.4);
-                } else {
-                    // Dual col
-                    if (Math.random() > 0.5) {
-                         x = -WIDTH * 0.25 + (Math.random() - 0.5) * (WIDTH * 0.4);
-                    } else {
-                         x = WIDTH * 0.25 + (Math.random() - 0.5) * (WIDTH * 0.4);
-                    }
-                }
-            }
-            
-            z = Math.sin(x * 0.015) * 12;
+            flow[flowOffset] = theta;
+            flow[flowOffset + 1] = phase;
+            flow[flowOffset + 2] = direction;
 
-            // Brighter colors for content
-            const nY = (y + HEIGHT/2) / HEIGHT;
-            tempColor.setHSL(0.58, 0.9, 0.5 + nY * 0.4); 
+            const t = phase * 2 - 1;
+            const radius = getDataFunnelRadius(t);
+            x = Math.cos(theta) * radius;
+            y = t * DATA_FUNNEL_HEIGHT;
+            z = Math.sin(theta) * radius;
+            tempColor.setHSL(0.61, 1.0, 0.72 + Math.random() * 0.18);
         }
         
         positions[i * 3] = x;
@@ -382,7 +377,7 @@ const Generators = {
         colors[i * 3 + 1] = tempColor.g;
         colors[i * 3 + 2] = tempColor.b;
     }
-    return { positions, colors };
+    return { positions, colors, flow, flowStart, flowKind: 'funnelMeridian' as const };
   },
 
   // 3. Solvers: Hypercube (Tesseract)
@@ -769,6 +764,9 @@ const ProductVis: React.FC<ProductVisProps> = ({ type, rotation = { x: 0, y: 0, 
     const geometry = new THREE.BufferGeometry();
     geometry.setAttribute('position', new THREE.BufferAttribute(shapeData.positions, 3));
     geometry.setAttribute('color', new THREE.BufferAttribute(shapeData.colors, 3));
+    const routerFlow = 'flow' in shapeData ? shapeData.flow : undefined;
+    const routerFlowStart = 'flowStart' in shapeData ? shapeData.flowStart : 0;
+    const routerFlowKind = 'flowKind' in shapeData ? shapeData.flowKind : undefined;
 
     const material = new THREE.PointsMaterial({
       size: 1.0,
@@ -803,6 +801,39 @@ const ProductVis: React.FC<ProductVisProps> = ({ type, rotation = { x: 0, y: 0, 
       // Gentle floating
       const time = performance.now() * 0.001;
       particles.position.y = Math.sin(time) * 5;
+
+      // PubFi's signal particles continuously move through its routing lanes.
+      if (routerFlow) {
+        const position = geometry.getAttribute('position') as THREE.BufferAttribute;
+        const values = position.array as Float32Array;
+
+        if (routerFlowKind === 'funnelMeridian') {
+          for (let i = 0; i < routerFlow.length / 3; i++) {
+            const offset = i * 3;
+            const theta = routerFlow[offset];
+            const progress = (routerFlow[offset + 1] + time * 0.08 * routerFlow[offset + 2] + 1) % 1;
+            const t = progress * 2 - 1;
+            const radius = getDataFunnelRadius(t);
+            const particleOffset = (routerFlowStart + i) * 3;
+
+            values[particleOffset] = Math.cos(theta) * radius;
+            values[particleOffset + 1] = t * DATA_FUNNEL_HEIGHT;
+            values[particleOffset + 2] = Math.sin(theta) * radius;
+          }
+        } else {
+          for (let i = 0; i < routerFlow.length / 8; i++) {
+            const offset = i * 8;
+            const progress = (routerFlow[offset + 6] + time * 0.18 * routerFlow[offset + 7]) % 1;
+            const particleOffset = (routerFlowStart + i) * 3;
+
+            values[particleOffset] = THREE.MathUtils.lerp(routerFlow[offset], routerFlow[offset + 3], progress);
+            values[particleOffset + 1] = THREE.MathUtils.lerp(routerFlow[offset + 1], routerFlow[offset + 4], progress);
+            values[particleOffset + 2] = THREE.MathUtils.lerp(routerFlow[offset + 2], routerFlow[offset + 5], progress);
+          }
+        }
+
+        position.needsUpdate = true;
+      }
 
       renderer.render(scene, camera);
     };
@@ -961,12 +992,12 @@ const bootstrap = () => {
         );
     }
 
-    // 3. Pubfi (DeFi -> News Sheet)
+    // 3. PubFi (agent-native data routing)
     const pubfiEl = document.getElementById('viz-pubfi');
     if (pubfiEl) {
         createRoot(pubfiEl).render(
             // Negative rotationSpeed for Clockwise rotation
-            <ProductVis type="newsSheet" rotation={{ x: 0, y: -0.2, z: 0 }} rotationSpeed={-0.002} />
+            <ProductVis type="dataRouter" rotation={{ x: 0, y: -0.2, z: 0 }} rotationSpeed={-0.002} />
         );
     }
 
